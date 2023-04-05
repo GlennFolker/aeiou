@@ -25,15 +25,6 @@ jobs:
 
           sudo debootstrap --arch=${{ matrix.target.arch }} --variant=minbase bionic /chroot-root
 
-          CARGO_CONFIG="$(printf "\
-          [build] \n\
-          rustflags = [ \n\
-              \\\\\"-C\\\\\", \\\\\"embed-bitcode=off\\\\\" \n\
-          ] \n\
-          [profile.dev] \n\
-          lto = \\\\\"off\\\\\" \
-          ")"
-
           SCRIPT="$(printf "\
           apt-get update -y &&\
           apt-get install -y \
@@ -46,7 +37,6 @@ jobs:
             --default-toolchain=nightly \
             --profile=minimal &&\
           source /root/.cargo/env &&\
-          echo \"$CARGO_CONFIG\" > /root/.cargo/config &&\
           \
           curl -L https://ziglang.org/builds/zig-linux-x86_64-0.11.0-dev.2375+771d07268.tar.xz -o zig.tar.xz &&\
           tar -xf zig.tar.xz &&\
