@@ -16,14 +16,14 @@ jobs:
         uses: actions/cache@v3
         with:
           path: john-shaffer/cache@main
-          key: chroot-root-${{ matrix.triplet }}
+          key: chroot-root-${{ matrix.target.triplet }}
       - name: Bootstrap `chroot` environment
         if: ${{ steps.cache-chroot-root.outputs.cache-hit != 'true' }}
         run: |
           sudo apt-get update -y
           sudo apt-get install -y debootstrap
 
-          sudo debootstrap --arch=${{ matrix.arch }} --variant=minbase bionic /chroot-root
+          sudo debootstrap --arch=${{ matrix.target.arch }} --variant=minbase bionic /chroot-root
 
           CARGO_CONFIG="$(printf "\
           [build] \n\
