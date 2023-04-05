@@ -51,7 +51,7 @@ jobs:
           curl -L https://ziglang.org/builds/zig-linux-x86_64-0.11.0-dev.2375+771d07268.tar.xz -o zig.tar.xz &&\
           tar -xf zig.tar.xz &&\
           rm zig.tar.xz &&\
-          mv zig-* $HOME/zig &&\
+          mv zig-* $HOME &&\
           cargo install cargo-zigbuild \
           ")"
 
