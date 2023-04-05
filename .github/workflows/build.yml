@@ -28,10 +28,10 @@ jobs:
           CARGO_CONFIG="$(printf "\
           [build] \n\
           rustflags = [ \n\
-              \"-C\", \"embed-bitcode=off\" \n\
+              \\\\\"-C\\\\\", \\\\\"embed-bitcode=off\\\\\" \n\
           ] \n\
           [profile.dev] \n\
-          lto = \"off\" \
+          lto = \\\\\"off\\\\\" \
           ")"
 
           SCRIPT="$(printf "\
