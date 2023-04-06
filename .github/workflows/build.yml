@@ -9,9 +9,9 @@ jobs:
             qualifier: x86_32
           - arch: amd64
             qualifier: x86_64
-          - arch: arm/v7
+          - arch: arm32v7
             qualifier: armv7
-          - arch: arm64/v8
+          - arch: arm64v8
             qualifier: aarch64
           - arch: ppc64le
             qualifier: ppc64le
