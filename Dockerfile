@@ -1,6 +1,7 @@
 FROM ubuntu:18.04
+ARG RUST_TRIPLET
 
-RUN apt-get update -qqy || true
+RUN apt-get update -qqy
 RUN apt-get install -qqy \
     curl pkg-config gcc \
     libx11-dev libasound2-dev libudev-dev libwayland-dev libxkbcommon-dev
