@@ -28,7 +28,7 @@ ENV PATH="/root/.cargo/bin:${PATH}"
 RUN curl -L https://ziglang.org/builds/zig-linux-x86_64-0.11.0-dev.2375+771d07268.tar.xz -o zig.tar.xz
 RUN tar -xf zig.tar.xz
 RUN rm zig.tar.xz
-RUN mv zig-linux-x86_64-0.11.0* /root
+RUN mv zig-linux-x86_64-0.11.0* /root/zig
 ENV PATH="/root/zig:${PATH}"
 
 RUN cargo install cargo-zigbuild
