@@ -1,9 +1,7 @@
 FROM ubuntu:17.04
 
-RUN dpkg --print-architecture
-
-RUN apt-get update -y
-RUN apt-get install -y \
+RUN apt-get update -qqy || true
+RUN apt-get install -qqy \
     curl pkg-config gcc \
     libx11-dev libasound2-dev libudev-dev libwayland-dev libxkbcommon-dev
 
