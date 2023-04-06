@@ -1,5 +1,7 @@
 FROM ubuntu:17.04
 
+RUN dpkg --print-architecture
+
 RUN apt-get update -y
 RUN apt-get install -y \
     curl pkg-config gcc \
@@ -18,4 +20,4 @@ lto = \"off\" \
 WORKDIR /aeiou
 COPY . .
 
-RUN cargo build
+RUN cargo build --target $RUST_TRIPLET
