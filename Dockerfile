@@ -15,7 +15,7 @@ RUN echo "deb [arch=armhf,arm64,ppc64el] http://ports.ubuntu.com/ubuntu-ports bi
 
 RUN apt-get update -qqy || true
 RUN apt-get install -qqy \
-    curl gcc pkg-config \
+    curl pkg-config gcc gcc-mingw-w64 \
     libx11-dev:amd64 libx11-dev:i386 libx11-dev:armhf libx11-dev:arm64 libx11-dev:ppc64el \
     libasound2-dev:amd64 libasound2-dev:i386 libasound2-dev:armhf libasound2-dev:arm64 libasound2-dev:ppc64el \
     libudev-dev:amd64 libudev-dev:i386 libudev-dev:armhf libudev-dev:arm64 libudev-dev:ppc64el \
@@ -65,4 +65,4 @@ ENV PKG_CONFIG_SYSROOT_DIR=
 ENV PKG_CONFIG_PATH=
 ENV PKG_CONFIG_LIBDIR=
 
-RUN cargo zigbuild --target x86_64-pc-windows-gnu --target i686-pc-windows-gnu
+RUN cargo build --target x86_64-pc-windows-gnu --target i686-pc-windows-gnu
