@@ -37,7 +37,8 @@ jobs:
           file: ./Dockerfile
           context: .
           platforms: linux/${{ matrix.target.arch }}
-          build-args: RUST_TRIPLET=${{ matrix.target.triplet }}
+          build-args: |
+            RUST_TRIPLET=${{ matrix.target.triplet }}
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/aeiou:latest
           cache-from: type=gha
