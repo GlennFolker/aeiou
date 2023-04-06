@@ -31,7 +31,7 @@ jobs:
         with:
           file: ./Dockerfile
           context: .
-          platforms: ${{ matrix.target.arch }}
+          platforms: linux/${{ matrix.target.arch }}
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/aeiou:latest
           cache-from: type=gha
