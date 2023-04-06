@@ -1,7 +1,20 @@
 on: [push, pull_request]
 
 jobs:
-  build:
+  build-linux:
+    strategy:
+      matrix:
+        target:
+          - arch: i386
+            qualifier: x86_32
+          - arch: amd64
+            qualifier: x86_64
+          - arch: arm32v7
+            qualifier: armv7
+          - arch: arm64v8
+            qualifier: aarch64
+          - arch: ppc64le
+            qualifier: ppc64le
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -18,7 +31,23 @@ jobs:
         with:
           file: ./Dockerfile
           context: .
+          platforms: ${{ matrix.target.arch }}
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/aeiou:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
+      - name: Copy executable from Docker image to host
+        run: |
+          id=$(docker ps -q | xargs)
+          build_path=$(\
+              docker exec $id ls -R / | \
+              grep "aeiou/target/debug:" | \
+              sed -e "s/:.*//" \
+          )
+
+          docker cp "$id:$build_path/aeiou" "hello-${{ matrix.target.qualifier }}"
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: hello-${{ matrix.target.qualifier }}-linux
+          path: hello-${{ matrix.target.qualifier }}
