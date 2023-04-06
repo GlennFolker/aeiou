@@ -18,4 +18,4 @@ rustflags = [\"-C\", \"embed-bitcode=off\"] \n\
 lto = \"off\" \
 " >> /root/.cargo/config
 
-RUN cargo build --target $BUILD_TARGET
+RUN cargo build
