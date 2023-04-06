@@ -15,7 +15,11 @@ RUN echo "deb [arch=armhf,arm64,ppc64el] http://ports.ubuntu.com/ubuntu-ports bi
 RUN apt-get update -qqy || true
 RUN apt-get install -qqy \
     curl gcc pkg-config \
-    {libx11-dev,libasound2-dev,libudev-dev,libwayland-dev,libxkbcommon-dev}:{amd64,i386,armhf,arm64,ppc64el}
+    libx11-dev:amd64 libx11-dev:i386 libx11-dev:armhf libx11-dev:arm64 libx11-dev:ppc64el \
+    libasound2-dev:amd64 libasound2-dev:i386 libasound2-dev:armhf libasound2-dev:arm64 libasound2-dev:ppc64el \
+    libudev-dev:amd64 libudev-dev:i386 libudev-dev:armhf libudev-dev:arm64 libudev-dev:ppc64el \
+    libwayland-dev:amd64 libwayland-dev:i386 libwayland-dev:armhf libwayland-dev:arm64 libwayland-dev:ppc64el \
+    libxkbcommon-dev:amd64 libxkbcommon-dev:i386 libxkbcommon-dev:armhf libxkbcommon-dev:arm64 libxkbcommon-dev:ppc64el
 
 RUN curl https://sh.rustup.rs -sSf | bash -s -- --default-toolchain nightly --profile minimal -y
 ENV PATH="$HOME/.cargo/bin:$PATH"
