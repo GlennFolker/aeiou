@@ -6,14 +6,19 @@ jobs:
       matrix:
         target:
           - arch: i386
+            triplet: i686-unknown-linux-gnu
             qualifier: x86_32
           - arch: amd64
+            triplet: x86_64-unknown-linux-gnu
             qualifier: x86_64
           - arch: arm/v7
+            triplet: armv7-unknown-linux-gnueabihf
             qualifier: armv7
           - arch: arm64/v8
+            triplet: aarch64-unknown-linux-gnu
             qualifier: aarch64
           - arch: ppc64le
+            triplet: powerpc64le-unknown-linux-gnu
             qualifier: ppc64le
     runs-on: ubuntu-latest
     steps:
@@ -32,6 +37,7 @@ jobs:
           file: ./Dockerfile
           context: .
           platforms: linux/${{ matrix.target.arch }}
+          build-args: RUST_TRIPLET=${{ matrix.target.triplet }}
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/aeiou:latest
           cache-from: type=gha
@@ -41,7 +47,7 @@ jobs:
           id=$(docker ps -q | xargs)
           build_path=$(\
               docker exec $id ls -R / | \
-              grep "aeiou/target/debug:" | \
+              grep "aeiou/target/${{ matrix.target.triplet }}/debug:" | \
               sed -e "s/:.*//" \
           )
 
