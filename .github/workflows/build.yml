@@ -9,8 +9,6 @@ jobs:
             qualifier: x86_32
           - arch: amd64
             qualifier: x86_64
-          - arch: arm32v7
-            qualifier: armv7
           - arch: arm64v8
             qualifier: aarch64
           - arch: ppc64le
@@ -26,7 +24,7 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - name: Build and push
+      - name: Build project and push Docker image
         uses: docker/build-push-action@v4
         with:
           file: ./Dockerfile
@@ -46,8 +44,39 @@ jobs:
           )
 
           docker cp "$id:$build_path/aeiou" "hello-${{ matrix.target.qualifier }}"
-      - name: Upload artifact
+      - name: Upload artifact for linux-${{ matrix.target.qualifier }}
         uses: actions/upload-artifact@v3
         with:
           name: hello-${{ matrix.target.qualifier }}-linux
           path: hello-${{ matrix.target.qualifier }}
+  build-windows:
+    strategy:
+      matrix:
+        target:
+          - triplet: x86_64-pc-windows-gnu
+            qualifier: x86_64
+          - triplet: i686-pc-windows-gnu
+            qualifier: x86_32
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@nightly
+        with:
+          targets: ${{ matrix.target.triplet }}
+      - name: Build project
+        run: |
+          printf "\
+          [build] \n\
+          rustflags = [\"-C\", \"embed-bitcode=off\"] \n\
+          [profile.dev] \n\
+          lto = \"off\" \
+          " > $HOME/.cargo/config
+
+          cargo build --target ${{ matrix.target.triplet }}
+      - name: Upload artifact for windows-${{ matrix.target.qualifier }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: aeiou-${{ matrix.target.qualifier }}-windows
+          path: target/${{ matrix.target.triplet }}/debug/aeiou.exe
