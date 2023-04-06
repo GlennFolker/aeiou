@@ -8,8 +8,8 @@ RUN dpkg --add-architecture armhf
 RUN dpkg --add-architecture arm64
 RUN dpkg --add-architecture ppc64el
 
-RUN echo "deb [arch=amd64,i386] http://archive.ubuntu.com/ubuntu/ bionic main restricted universe multiverse" >> /etc/apt/sources.list
-RUN echo "deb [arch=amd64,i386] http://archive.ubuntu.com/ubuntu/ bionic-updates main restricted universe multiverse" >> /etc/apt/sources.list
+RUN echo "deb [arch=amd64,i386] http://uk.archive.ubuntu.com/ubuntu/ bionic main restricted universe multiverse" >> /etc/apt/sources.list
+RUN echo "deb [arch=amd64,i386] http://uk.archive.ubuntu.com/ubuntu/ bionic-updates main restricted universe multiverse" >> /etc/apt/sources.list
 RUN echo "deb [arch=armhf,arm64,ppc64el] http://ports.ubuntu.com/ubuntu-ports bionic main restricted universe multiverse" >> /etc/apt/sources.list
 RUN echo "deb [arch=armhf,arm64,ppc64el] http://ports.ubuntu.com/ubuntu-ports bionic-updates main restricted universe multiverse" >> /etc/apt/sources.list
 
