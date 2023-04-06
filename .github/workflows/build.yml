@@ -4,69 +4,21 @@ env:
 
 jobs:
   build:
-    strategy:
-      matrix:
-        target:
-          - arch: amd64
-            triplet: x86_64-unknown-linux-gnu
     runs-on: ubuntu-latest
     steps:
-      - name: Clone repository
-        uses: actions/checkout@v3
-      - name: Restore `chroot` environment cache, if any
-        id: cache-chroot-root
-        uses: john-shaffer/cache/restore@main
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
         with:
-          path: /chroot-root
-          key: chroot-root-${{ matrix.target.triplet }}
-      - name: Bootstrap `chroot` environment
-        if: ${{ steps.cache-chroot-root.outputs.cache-hit != 'true' }}
-        run: |
-          sudo apt-get update -y
-          sudo apt-get install -y debootstrap
-
-          sudo debootstrap --arch=${{ matrix.target.arch }} --variant=minbase bionic /chroot-root
-
-          SCRIPT="$(printf "\
-          apt-get update -y &&\
-          apt-get install -y \
-            curl \
-            pkg-config gcc \
-            libudev-dev libxkbcommon-dev &&\
-          \
-          curl -sSf https://sh.rustup.rs | bash -s -- \
-            -y \
-            --default-toolchain=nightly \
-            --profile=minimal &&\
-          source /root/.cargo/env &&\
-          \
-          curl -L https://ziglang.org/builds/zig-linux-x86_64-0.11.0-dev.2375+771d07268.tar.xz -o zig.tar.xz &&\
-          tar -xf zig.tar.xz &&\
-          rm zig.tar.xz &&\
-          mv zig-* $HOME &&\
-          cargo install cargo-zigbuild \
-          ")"
-
-          sudo mount --make-rslave --rbind /proc /chroot-root/proc
-          sudo mount --make-rslave --rbind /sys /chroot-root/sys
-          sudo mount --make-rslave --rbind /dev /chroot-root/dev
-          sudo mount --make-rslave --rbind /run /chroot-root/run
-
-          sudo chroot /chroot-root /bin/bash -c "$SCRIPT"
-
-          sudo umount -R /chroot-root/proc
-          sudo umount -R /chroot-root/sys
-          sudo umount -R /chroot-root/dev
-          sudo umount -R /chroot-root/run
-      - name: Clear old GitHub cache
-        run: |
-          gh extension install actions/gh-actions-cache
-          if ${{ steps.cache-chroot-root.outputs.cache-hit == 'true' }}; then
-            gh actions-cache delete chroot-root-${{ matrix.target.triplet }} --confirm
-          fi
-      - name: Save new GitHub cache
-        uses: john-shaffer/cache/save@main
-        if: always()
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Build and push
+        uses: docker/build-push-action@v4
         with:
-          path: /chroot-root
-          key: chroot-root-${{ matrix.target.triplet }}
+          file: ./Dockerfile
+          context: .
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/aeiou:latest
