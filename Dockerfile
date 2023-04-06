@@ -4,4 +4,6 @@ WORKDIR /aeiou
 COPY . .
 
 RUN dpkg --print-foreign-architectures
-RUN dpkg --add-architecture i386 armhf arm64
+RUN dpkg --add-architecture i386
+RUN dpkg --add-architecture armhf
+RUN dpkg --add-architecture arm64
