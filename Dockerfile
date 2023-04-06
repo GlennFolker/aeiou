@@ -23,13 +23,13 @@ RUN apt-get install -qqy \
     libxkbcommon-dev:amd64 libxkbcommon-dev:i386 libxkbcommon-dev:armhf libxkbcommon-dev:arm64 libxkbcommon-dev:ppc64el
 
 RUN curl https://sh.rustup.rs -sSf | bash -s -- --default-toolchain nightly --profile minimal -y
-ENV PATH="$HOME/.cargo/bin:$PATH"
+ENV PATH="/root/.cargo/bin:${PATH}"
 
 RUN curl -L https://ziglang.org/builds/zig-linux-x86_64-0.11.0-dev.2375+771d07268.tar.xz -o zig.tar.xz
 RUN tar -xf zig.tar.xz
 RUN rm zig.tar.xz
-RUN mv zig-linux-x86_64-0.11.0* $HOME
-ENV PATH="$HOME/zig:$PATH"
+RUN mv zig-linux-x86_64-0.11.0* /root
+ENV PATH="/root/zig:${PATH}"
 
 RUN cargo install cargo-zigbuild
 RUN rustup target add \
